@@ -10,10 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +24,6 @@ import java.io.OutputStreamWriter;
 
 public class MainActivity extends AppCompatActivity {
     private final String FILENAME = "inttest.txt";
-
     EditText Text_Input;
     TextView textView;
     Button Save_Button;
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Save_Button = findViewById(R.id.Save_Button);
         Reset_Button = findViewById(R.id.Reset_Button);
         Exit_Button = findViewById(R.id.Exit_Button);
-        textView.setText(Internal_reader());
+        textView.setText(file_exists());
     }
 
     @Override
@@ -58,7 +60,28 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public String file_exists()
+    {
+        File file = new File(getApplicationContext().getFilesDir(),FILENAME);
+        if(file.exists())
+        {
+            return Internal_reader();
+        }
+        else
+        {
+            try {
+                FileOutputStream fOS = openFileOutput(FILENAME,MODE_PRIVATE);
+                fOS.close();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return "";
+    }
+
     public void Save_Internal_File(View view) {
+        File f = new File(FILENAME);
         writer_Internal(Text_Input.getText().toString());
         textView.setText(Internal_reader() + Text_Input.getText().toString());
     }
@@ -79,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
         StringBuilder sB = new StringBuilder();
         sB.append("");
         try{
-            FileOutputStream fOS = openFileOutput(FILENAME,MODE_PRIVATE);
-            fOS.close();
             FileInputStream fIS= openFileInput(FILENAME);
             InputStreamReader iSR = new InputStreamReader(fIS);
             BufferedReader bR = new BufferedReader(iSR);
