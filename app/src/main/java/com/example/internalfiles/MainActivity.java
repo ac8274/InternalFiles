@@ -82,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void Save_Internal_File(View view) {
         File f = new File(FILENAME);
-        writer_Internal(Text_Input.getText().toString());
-        textView.setText(Internal_reader() + Text_Input.getText().toString());
+        writer_Internal(Internal_reader()+Text_Input.getText().toString());
+        textView.setText(Internal_reader());
     }
 
 
